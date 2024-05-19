@@ -1,0 +1,224 @@
+@import url("./config.css");
+header {
+  background-color: #06283e;
+  height: 120px;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+header .logo img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+header .container {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  background-color: white;
+  padding: 10px 25px;
+  color: #06283e;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 30px;
+}
+nav .logout {
+  background-color: red;
+  color: white;
+}
+.text marquee {
+  padding: 30px;
+  font-style: 60px;
+  font-weight: bold;
+  color: #06283e;
+  text-transform: uppercase;
+}
+#section1 .container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+#section1 .container .gauche {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 49%;
+  height: 400px;
+}
+.container .gauche img {
+  width: 100%;
+  height: 188px;
+  object-fit: cover;
+}
+#section1 .container .droite {
+  width: 49%;
+  background-color: #06283e;
+  padding: 20px 0;
+}
+.container .droite h2 {
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  border-bottom: 1px solid #044065;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+.droite form {
+  width: 100%;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+form .input-group {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+form .input-group .input-label {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input-group .input-label label,
+.input-text label {
+  color: white;
+  font-size: 14px;
+}
+form .input-group input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  padding: 0 10px;
+  outline: none;
+  border: none;
+  background-color: white;
+  color: #06283e;
+  font-size: 15px;
+}
+
+form .btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+/* message d'erreur */
+.erreur {
+  background-color: red;
+  text-align: center;
+  padding: 5px;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.input-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-text textarea {
+  width: 100%;
+  height: 100px;
+  resize: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 10px;
+}
+form .input-group select {
+  width: 100%;
+  display: flex;
+  height: 40px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+}
+/* section 2 style */
+#section2 {
+  padding: 30px 0;
+  border-top: 2px solid #ddd;
+  margin-top: 20px;
+}
+#section2 h2 {
+  color: #06283e;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+/* tableau */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+table thead tr {
+  background-color: #06283e;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+}
+table th,
+table td {
+  padding: 12px 15px;
+}
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+table tbody td {
+  color: #06283e;
+  font-size: 15px;
+  font-weight: 500;
+}
+table tbody tr:nth-last-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+table tbody tr:last-of-type {
+  border-bottom: 2px solid #06283e;
+}
+table tbody .action a {
+  color: white;
+  background-color: red;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 30px;
+  font-weight: 500;
+}
+table tbody .action .mod {
+  background-color: #d98836;
+}
+
+table tbody .action .con {
+  background-color: #217214;
+}
+
+/* footer */
+footer {
+  background-color: #06283e;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+}

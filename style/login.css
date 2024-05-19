@@ -1,0 +1,61 @@
+@import url("./config.css");
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-container {
+  background: linear-gradient(to right, #4d8fb8, #06283e);
+  width: 500px;
+  border-radius: 15px;
+  padding: 20px;
+}
+.login-container h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 30px;
+}
+.login-container form {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow: hidden;
+}
+.login-container form button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid white;
+  outline: none;
+  font-size: 16px;
+  color: #06283e;
+  font-weight: 600;
+  cursor: pointer;
+}
+.login-container form input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+  color: white;
+}
+.login-container form input::placeholder {
+  color: rgb(232, 232, 232);
+}
+.create-account {
+  text-align: center;
+  padding: 10px;
+}
+.create-account a {
+  color: white;
+  padding: 10px;
+  text-decoration: underline;
+  display: block;
+}
