@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (!$_SESSION['auth']) {
+   header('Location:login.php');
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -15,13 +21,17 @@
             <img src="images/Logo.png" alt="">
          </a>
          <nav>
-            <a href="directeur.php">Page d'accueil</a>
+            <?php
+            if ($_SESSION['user']['fonction'] == 'Directeur') {
+               echo '<a href="directeur.php">Page d\'accueil</a>';
+            }
+            ?>
             <a href="logout.php" class="logout">Déconnexion</a>
          </nav>
       </div>
    </header>
    <div class="text">
-      <marquee>Bienvenue, Utilisateur</marquee>
+      <marquee>Bienvenue, <?php echo $_SESSION['user']['nom'] . ' ' . $_SESSION['user']['prenom']; ?></marquee>
    </div>
    <section>
       <div class="container">

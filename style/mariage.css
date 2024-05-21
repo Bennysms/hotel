@@ -123,13 +123,17 @@ form .btn {
   font-weight: 600;
 }
 /* message d'erreur */
-.erreur {
+.erreur,
+.succes {
   background-color: red;
   text-align: center;
   padding: 5px;
   color: white;
   border-radius: 10px;
   font-size: 12px;
+}
+.succes {
+  background-color: #11872a;
 }
 .input-text {
   display: flex;

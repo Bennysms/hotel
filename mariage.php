@@ -1,3 +1,31 @@
+<?php
+session_start();
+// inclure la base de données
+include 'db.php';
+if (!$_SESSION['auth']) {
+   header('Location:login.php');
+}
+
+if (isset($_POST['valider'])) {
+   if (!empty($_POST['marie']) && !empty($_POST['mariee']) && !empty($_POST['date']) && !empty($_POST['enfant']) && !empty($_POST['adresse'])) {
+      $marie = $_POST['marie'];
+      $mariee = $_POST['mariee'];
+      $date = $_POST['date'];
+      $enfant = $_POST['enfant'];
+      $adresse = $_POST['adresse'];
+
+      try {
+         $stmt1 = $pdo->prepare("INSERT INTO mariage (marie, mariee, date_mariage, enfants,adresse) VALUES (?, ?, ?, ?, ?)");
+         $stmt1->execute([$marie, $mariee, $date, $enfant, $adresse]);
+         $succes = 'Donnée ajoutée avec succès';
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+      }
+   } else {
+      $error = "Certains champs sont vide";
+   }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -21,7 +49,7 @@
       </div>
    </header>
    <div class="text">
-      <marquee>Bienvenue, Utilisateur</marquee>
+      <marquee>Bienvenue, <?php echo $_SESSION['user']['nom'] . ' ' . $_SESSION['user']['prenom']; ?></marquee>
    </div>
    <!-- section 1 -->
    <section id="section1">
@@ -34,18 +62,37 @@
          </div>
          <div class="droite">
             <h2>Ajouter un acte de mariage</h2>
-            <form method="post">
-               <p class="erreur">Message d'erreur</p>
+            <form method="POST">
+               <!-- message d'erreur -->
+               <p class="erreur" <?php if (isset($error)) {
+                                    echo 'style="display:block;"';
+                                 } else {
+                                    echo 'style="display:none;"';
+                                 } ?>>
+                  <?php if (isset($error)) {
+                     echo $error;
+                  } ?>
+               </p>
+               <!-- message de succès -->
+               <p class="succes" <?php if (isset($succes)) {
+                                    echo 'style="display:block;"';
+                                 } else {
+                                    echo 'style="display:none;"';
+                                 } ?>>
+                  <?php if (isset($succes)) {
+                     echo $succes;
+                  } ?>
+               </p>
                <div class="input-group">
                   <!-- nom -->
                   <div class="input-label">
                      <label for="marie">Nom du marié</label>
-                     <input type="text" id="username" name="nom" placeholder="Entre le nom du marié" required>
+                     <input type="text" id="marie" name="marie" placeholder="Entre le nom du marié" required>
                   </div>
                   <div class="input-label">
                      <!-- prenom -->
                      <label for="mariee">Nom de la mariée</label>
-                     <input type="text" id="prenom" name="prenom" placeholder="Entre le nom de la mariée" required>
+                     <input type="text" id="mariee" name="mariee" placeholder="Entre le nom de la mariée" required>
                   </div>
 
                </div>
@@ -58,10 +105,10 @@
                   </div>
                   <!-- cause -->
                   <div class="input-label">
-                     <label for="cause">Nombre d'enfants</label>
-                     <select name="" id="">
+                     <label for="enfants">Nombre d'enfants</label>
+                     <select name="enfant" id="enfants" required>
                         <option value="">Choisissez le nombre d'enfants</option>
-                        <option value="0">0</option>
+                        <option value="Pas d'enfants">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -71,13 +118,14 @@
                </div>
                <div class="input-text">
                   <label for="adresse">Adresse</label>
-                  <textarea name="adresse" placeholder="Entrer une adresse"></textarea>
+                  <textarea name="adresse" placeholder="Entrer une adresse" required></textarea>
                </div>
-               <button type="submit" class="btn">Valider</button>
+               <button type="submit" class="btn" name="valider">Valider</button>
             </form>
          </div>
       </div>
    </section>
+   <!-- le tableau -->
    <section id="section2">
       <div class="container">
          <h2>Tous les actes de mariage</h2>
@@ -95,50 +143,35 @@
             </thead>
 
             <tbody>
-               <tr>
-                  <td>12H</td>
-                  <td>jdjdjdj</td>
-                  <td>kdjdj</td>
-                  <td>jdjd</td>
-                  <td>jdjdjdj</td>
-                  <td>Directeur</td>
-                  <td class="action">
-                     <a href="" class="mod">Modifier</a>
-                     <a href="consulmariage.php" class="con">Consulter</a>
-                     <a href="" class="sup">Supprimer</a>
-                  </td>
+               <?php
+               try {
+                  $stmt2 = $pdo->prepare('SELECT * FROM mariage');
+                  $stmt2->execute();
+                  if ($stmt2->rowCount() > 0) {
+               ?>
+                     <?php while ($mariage = $stmt2->fetch(PDO::FETCH_ASSOC)) : ?>
+                        <tr>
+                           <td><?php echo $mariage['id'] ?></td>
+                           <td><?php echo $mariage['marie'] ?></td>
+                           <td><?php echo $mariage['mariee'] ?></td>
+                           <td><?php echo $mariage['date_mariage'] ?></td>
+                           <td><?php echo $mariage['enfants'] ?></td>
+                           <td><?php echo $mariage['adresse'] ?></td>
+                           <td class="action">
+                              <a href="modifmariage.php?id=<?php echo $mariage['id'] ?>" class="mod">Modifier</a>
+                              <a href="consulmariage.php?id=<?php echo $mariage['id'] ?>" class="con">Consulter</a>
+                              <a href="mariagesupp.php?id=<?php echo $mariage['id'] ?>" class="sup">Supprimer</a>
+                           </td>
 
-               </tr>
-               <tr>
-                  <td>12H</td>
-                  <td>ididid</td>
-                  <td>ididi</td>
-                  <td>kdkdi</td>
-                  <td>iidi</td>
-                  <td>Directeur</td>
-
-                  <td class="action">
-                     <a href="" class="mod">Modifier</a>
-                     <a href="consulmariage.php" class="con">Consulter</a>
-                     <a href="" class="sup">Supprimer</a>
-                  </td>
-
-               </tr>
-               <tr>
-                  <td>12</td>
-                  <td>jjdjdj</td>
-                  <td>dididi</td>
-                  <td>idiid</td>
-                  <td>ididid</td>
-                  <td>Directeur</td>
-
-                  <td class="action">
-                     <a href="" class="mod">Modifier</a>
-                     <a href="consulmariage.php" class="con">Consulter</a>
-                     <a href="" class="sup">Supprimer</a>
-                  </td>
-
-               </tr>
+                        </tr>
+                     <?php endwhile; ?>
+               <?php } else {
+                     echo '<tr><td>Aucune donnée enregistrés</td></tr>';
+                  }
+               } catch (PDOException $e) {
+                  echo $e->getMessage();
+               }
+               ?>
             </tbody>
          </table>
       </div>

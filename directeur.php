@@ -1,5 +1,12 @@
+<?php
+session_start();
+if (!$_SESSION['auth']) {
+    header('Location:login.php');
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -22,7 +29,7 @@
         </div>
     </header>
     <div class="text">
-        <marquee>Bienvenue, Utilisateur</marquee>
+        <marquee>Bienvenue, <?php echo $_SESSION['user']['nom'] . ' ' . $_SESSION['user']['prenom']; ?></marquee>
     </div>
     <section>
         <div class="container">

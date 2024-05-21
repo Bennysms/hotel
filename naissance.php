@@ -1,3 +1,30 @@
+<?php
+session_start();
+// inclure la base de données
+include 'db.php';
+if (!$_SESSION['auth']) {
+   header('Location:login.php');
+}
+if (isset($_POST['valider'])) {
+   if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['pere']) && !empty($_POST['mere']) && !empty($_POST['nat']) && !empty($_POST['date']) && !empty($_POST['adresse'])) {
+      $nom = $_POST['nom'];
+      $prenom = $_POST['prenom'];
+      $pere = $_POST['pere'];
+      $mere = $_POST['mere'];
+      $nat = $_POST['nat'];
+      $date = $_POST['date'];
+      $adresse = $_POST['adresse'];
+
+      try {
+         $stmt1 = $pdo->prepare("INSERT INTO naissance (nom, prenom, pere, mere, nationalite,date_naissance,adresse) VALUES (?, ?, ?, ?, ?,?,?)");
+         $stmt1->execute([$nom, $prenom, $pere, $mere, $nat, $date, $adresse]);
+         $succes = 'Utilisateur ajouté avec succès';
+      } catch (PDOException $e) {
+         echo $e->getMessage();
+      }
+   }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -21,7 +48,7 @@
       </div>
    </header>
    <div class="text">
-      <marquee>Bienvenue, Utilisateur</marquee>
+      <marquee>Bienvenue, <?php echo $_SESSION['user']['nom'] . ' ' . $_SESSION['user']['prenom']; ?></marquee>
    </div>
    <!-- section 1 -->
    <section id="section1">
@@ -35,17 +62,36 @@
          <div class="droite">
             <h2>Ajouter un acte de naissance</h2>
             <form method="post">
-               <p class="erreur">Message d'erreur</p>
+               <!-- message d'erreur -->
+               <p class="erreur" <?php if (isset($error)) {
+                                    echo 'style="display:block;"';
+                                 } else {
+                                    echo 'style="display:none;"';
+                                 } ?>>
+                  <?php if (isset($error)) {
+                     echo $error;
+                  } ?>
+               </p>
+               <!-- message de succès -->
+               <p class="succes" <?php if (isset($succes)) {
+                                    echo 'style="display:block;"';
+                                 } else {
+                                    echo 'style="display:none;"';
+                                 } ?>>
+                  <?php if (isset($succes)) {
+                     echo $succes;
+                  } ?>
+               </p>
                <div class="input-group">
                   <!-- nom -->
                   <div class="input-label">
                      <label for="nom">Nom</label>
-                     <input type="text" id="username" name="nom" placeholder="Entre votre nom" required>
+                     <input type="text" id="nom" name="nom" placeholder="Entre le nom" required>
                   </div>
                   <div class="input-label">
                      <!-- prenom -->
                      <label for="prenom">Prénom</label>
-                     <input type="text" id="prenom" name="prenom" placeholder="Entre votre prénom" required>
+                     <input type="text" id="prenom" name="prenom" placeholder="Entre le prénom" required>
                   </div>
 
                </div>
@@ -80,7 +126,7 @@
                   <label for="adresse">Adresse</label>
                   <textarea name="adresse" placeholder="Entrer une adresse"></textarea>
                </div>
-               <button type="submit" class="btn">Valider</button>
+               <button type="submit" class="btn" name="valider">Valider</button>
             </form>
          </div>
       </div>
@@ -104,54 +150,38 @@
             </thead>
 
             <tbody>
-               <tr>
-                  <td>12H</td>
-                  <td>Simisi</td>
-                  <td>benny</td>
-                  <td>simisi</td>
-                  <td>23563788</td>
-                  <td>Directeur</td>
-                  <td>Directeur</td>
-                  <td>Directeur</td>
-                  <td class="action">
-                     <a href="" class="mod">Modifier</a>
-                     <a href="consulnaiss.php" class="con">Consulter</a>
-                     <a href="" class="sup">Supprimer</a>
-                  </td>
+               <?php
+               try {
+                  $stmt2 = $pdo->prepare('SELECT * FROM naissance');
+                  $stmt2->execute();
+                  if ($stmt2->rowCount() > 0) {
+               ?>
+                     <?php while ($nat = $stmt2->fetch(PDO::FETCH_ASSOC)) : ?>
+                        <tr>
+                           <td><?php echo $nat['id'] ?></td>
+                           <td><?php echo $nat['nom'] ?></td>
+                           <td><?php echo $nat['prenom'] ?></td>
+                           <td><?php echo $nat['pere'] ?></td>
+                           <td><?php echo $nat['mere'] ?></td>
+                           <td><?php echo $nat['nationalite'] ?></td>
+                           <td><?php echo $nat['date_naissance'] ?></td>
+                           <td><?php echo $nat['adresse'] ?></td>
+                           <td class="action">
+                              <a href="modifnaiss.php?id=<?php echo $nat['id'] ?>" class="mod">Modifier</a>
+                              <a href="consulnaiss.php?id=<?php echo $nat['id'] ?>" class="con">Consulter</a>
+                              <a href="naissancesupp.php?id=<?php echo $nat['id'] ?>" class="sup">Supprimer</a>
+                           </td>
 
-               </tr>
-               <tr>
-                  <td>12H</td>
-                  <td>Simisi</td>
-                  <td>benny</td>
-                  <td>simisib</td>
-                  <td>23563788</td>
-                  <td>Directeur</td>
-                  <td>Directeur</td>
-                  <td>Directeur</td>
-                  <td class="action">
-                     <a href="" class="mod">Modifier</a>
-                     <a href="consulnaiss.php" class="con">Consulter</a>
-                     <a href="" class="sup">Supprimer</a>
-                  </td>
+                        </tr>
+                     <?php endwhile; ?>
+               <?php } else {
+                     echo '<tr><td>Aucune donnée enregistrés</td></tr>';
+                  }
+               } catch (PDOException $e) {
+                  echo $e->getMessage();
+               }
+               ?>
 
-               </tr>
-               <tr>
-                  <td>12</td>
-                  <td>Simisi</td>
-                  <td>benny</td>
-                  <td>simisibe</td>
-                  <td>23563788</td>
-                  <td>Directeur</td>
-                  <td>Directeur</td>
-                  <td>Directeur</td>
-                  <td class="action">
-                     <a href="" class="mod">Modifier</a>
-                     <a href="consulnaiss.php" class="con">Consulter</a>
-                     <a href="" class="sup">Supprimer</a>
-                  </td>
-
-               </tr>
             </tbody>
          </table>
       </div>

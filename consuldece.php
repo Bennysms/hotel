@@ -1,3 +1,26 @@
+<?php
+session_start();
+include 'db.php';
+if (!$_SESSION['auth']) {
+    header('Location:login.php');
+    exit();
+}
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    try {
+        $stmt = $pdo->prepare('SELECT * FROM deces WHERE id = ?');
+        $stmt->execute([$id]);
+        if ($stmt->rowCount() > 0) {
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            echo 'Identifiant introuvable';
+            exit();
+        }
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -21,39 +44,39 @@
         </div>
     </header>
     <div class="text">
-        <marquee>Bienvenue, Utilisateur</marquee>
+        <marquee>Bienvenue, <?php echo $_SESSION['user']['nom'] . ' ' . $_SESSION['user']['prenom']; ?></marquee>
     </div>
     <main>
-        <h1>Acte de décès numéro 1</h1>
+        <h1>Acte de décès numéro <span class="id"><?php echo $data['id'] ?></span></h1>
         <div class="container">
             <div class="acte">
                 <div class="identite">
                     <h2>Nom :</h2>
-                    <p>hdhdh</p>
+                    <p><?php echo $data['nom'] ?></p>
                 </div>
                 <div class="identite">
                     <h2>Prénom :</h2>
-                    <p>jdjdj</p>
+                    <p><?php echo $data['prenom'] ?></p>
                 </div>
                 <div class="identite">
                     <h2>Nationalité :</h2>
-                    <p>kjdjdj</p>
+                    <p><?php echo $data['nationalite'] ?></p>
                 </div>
                 <div class="identite">
                     <h2>Cause du décès :</h2>
-                    <p>jdhdhd</p>
+                    <p><?php echo $data['cause'] ?></p>
                 </div>
                 <div class="identite">
                     <h2>Date de naissance :</h2>
-                    <p>heejehe</p>
+                    <p><?php echo $data['naissance'] ?></p>
                 </div>
                 <div class="identite">
                     <h2>Date du décès :</h2>
-                    <p>jehejej</p>
+                    <p><?php echo $data['deces'] ?></p>
                 </div>
                 <div class="identite">
                     <h2>Adresse :</h2>
-                    <p>hdjdjdj</p>
+                    <p><?php echo $data['adresse'] ?></p>
                 </div>
             </div>
             <div class="btn-group">
