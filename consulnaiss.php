@@ -80,7 +80,7 @@ if (isset($_GET['id'])) {
             </div>
          </div>
          <div class="btn-group">
-            <a href="">Imprimer</a>
+            <a href="naissancePDF.php?id=<?php echo $data['id']; ?>">Télécharger</a>
             <a href="">Envoyez par email</a>
          </div>
       </div>
